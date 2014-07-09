@@ -16,6 +16,7 @@ arrowCentreProportion = 1/4;
 arrowHeadHeightProportion = 1.1;
 fiddle = 0.05;
 accuracy = 1;
+minDepth = 1.2;
 
 sphereRadius = (circleRadius * circleRadius + circleHeight * circleHeight) / (2 * circleHeight);
 
@@ -69,10 +70,10 @@ for(i = [0:3]) {
 
 intersection() {
   translate([0, 0, 100/2-fiddle]) {
-    cube([200, 200, 100], center=true);
+    cylinder(r=(circleRadius + torusRadius), h=100, center=true, $fn=128*accuracy);
   } 
   union() {
-    translate([0, 0, -(sphereRadius-circleHeight)]) {
+    translate([0, 0, -(sphereRadius-circleHeight-minDepth)]) {
       sphere(r=sphereRadius, $fn = 300*accuracy);
     }
     rotate_extrude(convexity = 10, $fn=128*accuracy) {

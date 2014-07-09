@@ -14,14 +14,13 @@ smallArrowHeight = 7;
 arrowAngle = 30;
 arrowCentreProportion = 1/4;
 arrowHeadHeightProportion = 1.1;
-fiddle = 0.1;
-
-$fn = 100;
+fiddle = 0.05;
+accuracy = 0.2;
 
 sphereRadius = (circleRadius * circleRadius + circleHeight * circleHeight) / (2 * circleHeight);
 
 module arrowHead(length, width, baseHeight, height) {
-  linear_extrude(height = baseHeight) {
+  linear_extrude(height = baseHeight+fiddle) {
     polygon([[length, 0], [0, -width/2], [0, width/2]]);
   }
   polyhedron(
@@ -32,20 +31,20 @@ module arrowHead(length, width, baseHeight, height) {
 
 module arrow(length, shaftWidth, headLength, headWidth, height) {
   difference() {
-	translate([0, -shaftWidth/2, 0]) {
-      cube([length - headLength * (1 - arrowCentreProportion), shaftWidth, height], center=false);
+	translate([-fiddle, -shaftWidth/2, 0]) {
+      cube([fiddle+length - headLength * (1 - arrowCentreProportion), shaftWidth, height], center=false);
 	}
-	translate([-fiddle, 0, height]) {
+	translate([-fiddle*2, 0, height]) {
 	rotate([arrowAngle, 0, 0]) {
 	translate([0, -shaftWidth, 0]) {
-      cube([length - headLength/2+fiddle*2, shaftWidth*2, height], center=false);
+      cube([length - headLength/2+fiddle*3, shaftWidth*2, height], center=false);
     }
     }
     }
-	translate([-fiddle, 0, height]) {
+	translate([-fiddle*2, 0, height]) {
 	rotate([-arrowAngle, 0, 0]) {
 	translate([0, -shaftWidth, 0]) {
-      cube([length - headLength/2+ fiddle*2, shaftWidth*2, height], center=false);
+      cube([length - headLength/2+ fiddle*3, shaftWidth*2, height], center=false);
     }
     }
     }
@@ -70,16 +69,16 @@ for(i = [0:3]) {
 
 
 intersection() {
-  translate([0, 0, 100/2]) {
-    cube([100, 100, 100], center=true);
+  translate([0, 0, 100/2-fiddle]) {
+    cube([200, 200, 100], center=true);
   } 
   union() {
     translate([0, 0, -(sphereRadius-circleHeight)]) {
-      sphere(r=sphereRadius, $fn = 500);
+      sphere(r=sphereRadius, $fn = 300*accuracy);
     }
-    rotate_extrude(convexity = 10) {
+    rotate_extrude(convexity = 10, $fn=128*accuracy) {
     translate([circleRadius, 0, 0]) {
-      circle(r = torusRadius); 
+      circle(r = torusRadius, $fn=30*accuracy); 
     }
     }
   }

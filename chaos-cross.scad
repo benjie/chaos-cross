@@ -15,7 +15,7 @@ arrowAngle = 30;
 arrowCentreProportion = 1/4;
 arrowHeadHeightProportion = 1.1;
 fiddle = 0.05;
-accuracy = 0.2;
+accuracy = 1;
 
 sphereRadius = (circleRadius * circleRadius + circleHeight * circleHeight) / (2 * circleHeight);
 
@@ -25,7 +25,7 @@ module arrowHead(length, width, baseHeight, height) {
   }
   polyhedron(
     points = [[length, 0, baseHeight], [0, -width/2, baseHeight], [0, width/2, baseHeight], [length * arrowCentreProportion, 0, height]],
-    faces = [[0, 1, 3], [1, 2, 3], [2, 0, 3]]
+    faces = [[0, 1, 3], [1, 2, 3], [2, 0, 3], [1, 0, 2]]
   );
 };
 
@@ -53,7 +53,6 @@ module arrow(length, shaftWidth, headLength, headWidth, height) {
     arrowHead(headLength, headWidth, height - tan(arrowAngle) * shaftWidth / 2, height*arrowHeadHeightProportion);
   }
 };
-//cube([arrowLength - arrowHeadLength/2, arrowBodyWidthFactor*arrowHeadWidth, arrowHeight]);
 for(i = [0:3]) {
   rotate([0, 0, i*90]) {
     arrow(arrowLength, arrowWidth, arrowHeadLength, arrowHeadWidth, arrowHeight);
